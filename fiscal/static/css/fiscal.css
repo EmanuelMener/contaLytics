@@ -1,0 +1,304 @@
+/* Main Content */
+
+:root {
+    --primary-color: #16233b;
+    --secondary-color: #029694;
+    --accent-color: #dadada;
+}
+
+.main {
+    width: 100%;
+    margin-left: 250px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Permite que o elemento ocupe o espaço restante */
+    overflow-y: auto; /* Ativa o scroll vertical */
+    overflow-x: hidden; /* Opcional: Oculta scroll horizontal */
+    background-color: #f5f6fa; /* Mantém o fundo claro */
+    height: calc(100vh - altura-do-header); /* Ajuste dinâmico caso exista header */
+    box-sizing: border-box; /* Inclui padding no cálculo da altura */
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar.closed ~ .main {
+    margin-left: 80px;
+}
+
+/* Botões de Ação */
+.actions {
+    display: flex;
+    max-width: 80%;
+    min-width: 90%;
+    margin: 0 auto;
+    padding: 50px 0 50px;
+    gap: 20px; /* Espaço entre os botões */
+}
+
+.sidebar.closed ~ .actions{
+    width: 50%;
+
+}
+
+.btn-action {
+    flex: 1; /* Botões de ação ocupam o mesmo espaço */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: #1e3a8a;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-action i {
+    margin-right: 10px;
+}
+
+.btn-action:hover {
+    background-color: #2c4a7a;
+    transform: scale(1.05); /* Leve aumento ao passar o mouse */
+}
+
+.btn-action:active {
+    transform: scale(0.95); /* Leve redução ao clicar */
+}
+
+/* Formulários e Popups */
+.form-popup,
+.relatorios-popup {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    background-color: #f6f6f6;
+    padding: 20px;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 3000;
+    width: 30rem;
+    margin: 0 auto;
+}
+
+.cabecaForm{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--primary-color);
+
+    margin-bottom: 1.5rem;
+    width: 100%;
+    height: auto;
+}
+
+
+
+.form-popup.visible {
+    display: block; /* Exibe o formulário */
+}
+
+.id-data{
+    display: flex;
+    justify-content: space-between;
+}
+
+.id-data label{
+    width: 13rem;
+}
+
+
+.contas{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.form-popup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-popup input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.list{
+    display: flex;
+    width: 13rem;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+.historico{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.form-buttons{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+.btn-cancel {
+    background-color: #dc2626;
+    color: white;
+}
+
+.btn-salvar {
+    background-color: #26dc6f;
+    color: white;
+}
+
+/* Relatórios */
+.relatorios-popup {
+    display: none; /* Escondido por padrão */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel-rel{
+    background-color: #dc2626;
+    color: white;
+    width: 100%;
+    padding: 15px 10px;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+
+.relatorios-popup.hidden {
+    display: none;
+}
+
+.hidden {
+    display: none !important; /* Garante que o elemento está oculto */
+    visibility: hidden; /* Opcional: Esconde visualmente */
+    opacity: 0; /* Para possíveis transições */
+    pointer-events: none; /* Desabilita interação */
+}
+
+/* Tabela de Lançamentos */
+.recent-transactions {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    min-width: 90%;
+    margin: 0 auto;
+}
+
+.recent-transactions h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #1e3a8a;
+}
+
+.recent-transactions table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.recent-transactions th,
+.recent-transactions td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.recent-transactions th {
+    background-color: #1e3a8a;
+    color: white;
+}
+
+.recent-transactions td {
+    background-color: #f9f9f9;
+}
+
+.recent-transactions .btn-view,
+.recent-transactions .btn-edit,
+.recent-transactions .btn-apagar {
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.recent-transactions .btn-view {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.recent-transactions .btn-view:hover {
+    background-color: #2563eb;
+}
+
+.recent-transactions .btn-edit {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.recent-transactions .btn-edit:hover {
+    background-color: #d97706;
+}
+.recent-transactions .btn-apagar {
+    background-color: #f50b0b;
+    color: white;
+}
+
+.recent-transactions .btn-apagar:hover {
+    background-color: #d14b4b;
+}
+
+
+
+/* Relatórios Popup */
+.relatorios-popup h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #1e3a8a;
+}
+
+.btn-report {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #1e3a8a;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-report:hover {
+    background-color: #2c4a7a;
+}
+

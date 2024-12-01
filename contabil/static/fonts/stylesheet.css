@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'ARP Display 240';
+    src: url('ARPDisplay-240.eot');
+    src: local('ARP Display 240'), local('ARPDisplay-240'),
+        url('ARPDisplay-240.eot?#iefix') format('embedded-opentype'),
+        url('ARPDisplay-240.woff2') format('woff2'),
+        url('ARPDisplay-240.woff') format('woff'),
+        url('ARPDisplay-240.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP 40';
+    src: url('ARP-40.eot');
+    src: local('ARP 40'), local('ARP-40'),
+        url('ARP-40.eot?#iefix') format('embedded-opentype'),
+        url('ARP-40.woff2') format('woff2'),
+        url('ARP-40.woff') format('woff'),
+        url('ARP-40.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP Display 20';
+    src: url('ARPDisplay-20.eot');
+    src: local('ARP Display 20'), local('ARPDisplay-20'),
+        url('ARPDisplay-20.eot?#iefix') format('embedded-opentype'),
+        url('ARPDisplay-20.woff2') format('woff2'),
+        url('ARPDisplay-20.woff') format('woff'),
+        url('ARPDisplay-20.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP 150';
+    src: url('ARP-150.eot');
+    src: local('ARP 150'), local('ARP-150'),
+        url('ARP-150.eot?#iefix') format('embedded-opentype'),
+        url('ARP-150.woff2') format('woff2'),
+        url('ARP-150.woff') format('woff'),
+        url('ARP-150.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP 240';
+    src: url('ARP-240.eot');
+    src: local('ARP 240'), local('ARP-240'),
+        url('ARP-240.eot?#iefix') format('embedded-opentype'),
+        url('ARP-240.woff2') format('woff2'),
+        url('ARP-240.woff') format('woff'),
+        url('ARP-240.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP 80';
+    src: url('ARP-80.eot');
+    src: local('ARP 80'), local('ARP-80'),
+        url('ARP-80.eot?#iefix') format('embedded-opentype'),
+        url('ARP-80.woff2') format('woff2'),
+        url('ARP-80.woff') format('woff'),
+        url('ARP-80.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP Display 80';
+    src: url('ARPDisplay-80.eot');
+    src: local('ARP Display 80'), local('ARPDisplay-80'),
+        url('ARPDisplay-80.eot?#iefix') format('embedded-opentype'),
+        url('ARPDisplay-80.woff2') format('woff2'),
+        url('ARPDisplay-80.woff') format('woff'),
+        url('ARPDisplay-80.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP 20';
+    src: url('ARP-20.eot');
+    src: local('ARP 20'), local('ARP-20'),
+        url('ARP-20.eot?#iefix') format('embedded-opentype'),
+        url('ARP-20.woff2') format('woff2'),
+        url('ARP-20.woff') format('woff'),
+        url('ARP-20.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP Display 40';
+    src: url('ARPDisplay-40.eot');
+    src: local('ARP Display 40'), local('ARPDisplay-40'),
+        url('ARPDisplay-40.eot?#iefix') format('embedded-opentype'),
+        url('ARPDisplay-40.woff2') format('woff2'),
+        url('ARPDisplay-40.woff') format('woff'),
+        url('ARPDisplay-40.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ARP Display 150';
+    src: url('ARPDisplay-150.eot');
+    src: local('ARP Display 150'), local('ARPDisplay-150'),
+        url('ARPDisplay-150.eot?#iefix') format('embedded-opentype'),
+        url('ARPDisplay-150.woff2') format('woff2'),
+        url('ARPDisplay-150.woff') format('woff'),
+        url('ARPDisplay-150.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+

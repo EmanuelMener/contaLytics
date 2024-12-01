@@ -1,0 +1,512 @@
+    <!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard - Sistema Contábil</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+        <link rel="stylesheet" href="{% static 'css/contabil.css' %}">
+        <link rel="stylesheet" href="{% static 'css/fiscal.css' %}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    </head>
+    <body>
+        <div class="container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+               <button class="toggle-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <img src="{% static 'images/logo.svg' %}" alt="User" class="logo-img">
+                    <img src="{% static 'images/logotipo.svg' %}" alt="User" class="logotipo-img">
+
+                </div>
+                <nav class="nav">
+                    <div class="profile">
+                        <div class="profile-canva">
+                            <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                        </div>
+                        <div class="inf_personal">
+                            <p class="username">Lucas Montana</p>
+                            <p class="email">
+                                <i class="fas fa-envelope"></i> lucas.mon@co...
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{% url 'contabilidade:dashboard' %}" class="nav-link">
+                        <i class="fas fa-home"></i> <spam>Home</spam>
+                    </a>
+                    <a href="{% url 'contabil:dashboard' %}" class="nav-link">
+                        <i class="fas fa-chart-line"></i> <spam>Contábil</spam>
+                    </a>
+                    <a href="{% url 'fiscal:dashboard' %}" class="nav-link marcador-Ativado">
+                        <i class="fas fa-file-invoice-dollar marcadorIco-Ativado"></i> <spam>Fiscal</spam>
+                    </a>
+                    <a href="{% url 'folha_pagamento:dashboard' %}" class="nav-link">
+                        <i class="fas fa-money-check-alt"></i> <spam>Folha de Pagamento</spam>
+                    </a>
+                    <a href="{% url 'processos:dashboard' %}" class="nav-link">
+                        <i class="fas fa-gavel"></i> <spam>Processos</spam>
+                    </a>
+                </nav>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout">
+                        <span>Sair</span> <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </form>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main">
+                <!-- Barra de Pesquisa -->
+                <div class="barradepesquisa">
+                    <div class="search-bar">
+                        <button class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <input type="text" placeholder="Pesquisar..." class="search-input">
+                        <div class="notif-canva">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="profile-canva">
+                            <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <header class="header">
+                    <h2>Módulo Fiscal</h2>
+                    <p>Bem-vindo ao Módulo Fiscal</p>
+                </header>
+
+                <!-- Cards de Ações -->
+                <section class="actions">
+                    <button class="btn-action" onclick="toggleForm('lancamentoForm')">
+                        <i class="fas fa-plus-circle"></i> Declarar Imposto
+                    </button>
+                    <button class="btn-action" onclick="toggleReports('relatoriosSection')">
+                        <i class="fas fa-file-alt"></i> Relatórios
+                    </button>
+                    <button class="btn-action" onclick="openAiTool()">
+                        <i class="fas fa-robot"></i> Importar NF com AI
+                    </button>
+                </section>
+
+                <!-- Formulário de calculo de IR -->
+                <div id="calculoImpostoForm" class="form-popup hidden">
+                    <form action="{% url 'fiscal:calcular_imposto' %}" method="POST" id="form-imposto">
+                        <div class="cabecaForm">
+                            <h3 id="form-title">Calcular Simples Nacional</h3>
+                            <button type="button" class="btn" onclick="toggleForm('calculoImpostoForm')"><i class="fas fa-close"></i></button>
+                        </div>
+
+                        {% csrf_token %}
+                        <!-- RBT12 -->
+                        <label for="rbt12">Receita Bruta dos Últimos 12 Meses:</label>
+                        <input type="number" step="0.01" id="rbt12" name="rbt12" required>
+
+                        <!-- Faturamento do mês -->
+                        <label for="faturamento_base_mes">Faturamento Base do Mês:</label>
+                        <input type="number" step="0.01" id="faturamento_base_mes" name="faturamento_base_mes" required>
+
+                        <!-- Período -->
+                        <label for="periodo">Período:</label>
+                        <input type="month" id="periodo" name="periodo" required>
+
+                                <!-- Alíquota -->
+                        <label for="aliquota">Alíquota (%):</label>
+                        <input type="number" step="0.01" id="aliquota" name="aliquota" required>
+
+                        <input type="hidden" id="imposto_devido" name="imposto_devido" value="">
+
+
+                        <!-- Botões de Ação -->
+                        <div class="form-buttons">
+                            <button type="submit" class="btn">Calcular</button>
+                            <button type="button" class="btn-cancel btn" onclick="toggleForm('calculoImpostoForm')">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <!-- Relatórios -->
+                <div id="relatoriosSection" class="form-popup hidden">
+                    <h3>Relatórios Disponíveis</h3>
+                    <button class="btn-report" onclick="generateReport('dre')">DRE</button>
+                    <button class="btn-report" onclick="generateReport('balanco')">Balanço Patrimonial</button>
+                    <button class="btn-report" onclick="generateReport('dfc')">DFC</button>
+                    <button class="btn-report" onclick="generateReport('indices')">Índices Financeiros</button>
+                    <button class="btn-cancel-rel btn" onclick="toggleReports('relatoriosSection')">Fechar</button>
+                </div>
+
+                <!-- Tabela de Últimos calculos -->
+                        <div class="recent-transactions">
+                    <h2>Últimos Lançamentos Contábeis</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th onclick="ordenarTabela(0)">Período <i class="fas fa-sort"></i></th>
+                                <th onclick="ordenarTabela(1)">RBT12 <i class="fas fa-sort"></i></th>
+                                <th onclick="ordenarTabela(2)">Faturamento do Mês <i class="fas fa-sort"></i></th>
+                                <th onclick="ordenarTabela(3)">Alíquota (%) <i class="fas fa-sort"></i></th>
+                                <th onclick="ordenarTabela(4)">Imposto Devido <i class="fas fa-sort"></i></th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resultado in resultados %}
+                            <tr>
+                                <td>{{ resultado.periodo }}</td>
+                                <td>R$ {{ resultado.rbt12 }}</td>
+                                <td>R$ {{ resultado.faturamento_base_mes }}</td>
+                                <td>{{ resultado.aliquota }}%</td>
+                                <td>R$ {{ resultado.imposto_devido }}</td>
+                                <td>
+                                    <button class="btn-view" data-id="{{ resultado.id }}"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-edit" data-id="{{ resultado.id }}"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn-apagar" data-id="{{ resultado.id }}"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">Nenhum lançamento encontrado.</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                            <!-- Resumo abaixo da tabela -->
+                    <div class="resumo-tabela">
+                        <p><strong>Total de Impostos Calculados:</strong> R$ {{ total_impostos }}</p>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ativosCtx = document.getElementById('ativosChart').getContext('2d');
+    new Chart(ativosCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+            datasets: [{
+                label: 'Ativos',
+                data: [100, 200, 150, 300, 250],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: false, // Desativa a responsividade
+            maintainAspectRatio: false, // Garante que o gráfico respeite o tamanho do canvas
+        }
+    });
+
+    const passivosCtx = document.getElementById('passivosChart').getContext('2d');
+    new Chart(passivosCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+            datasets: [{
+                label: 'Passivos',
+                data: [80, 150, 130, 200, 220],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+        }
+    });
+
+    </script>
+
+    <script>
+    const activityCtx = document.getElementById('activityChart').getContext('2d');
+    new Chart(activityCtx, {
+        type: 'line',
+        data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Eixo X (dias do mês)
+            datasets: [
+                {
+                    label: 'Linha 1',
+                    data: [500, 400, 600, 550, 700, 500, 600, 750, 650, 500],
+                    borderColor: 'rgba(33, 150, 243, 1)', // Azul principal
+                    backgroundColor: 'rgba(33, 150, 243, 0.1)', // Preenchimento leve
+                    borderWidth: 2,
+                    tension: 0.4, // Curvatura das linhas
+                },
+                {
+                    label: 'Linha 2',
+                    data: [400, 300, 500, 450, 600, 450, 550, 700, 600, 450],
+                    borderColor: 'rgba(0, 200, 255, 1)', // Azul secundário
+                    backgroundColor: 'rgba(0, 200, 255, 0.1)', // Preenchimento leve
+                    borderWidth: 2,
+                    tension: 0.4, // Curvatura das linhas
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Permite que o gráfico use o tamanho do container
+        },
+    });
+
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.classList.toggle('closed'); // Adiciona ou remove a classe 'closed'
+    }
+    </script>
+
+        <script>
+            function showReports() {
+                const section = document.getElementById('relatoriosSection');
+                section.classList.remove('hidden');
+            }
+
+            function hideReports() {
+                const section = document.getElementById('relatoriosSection');
+                section.classList.add('hidden');
+            }
+
+            function openAiTool() {
+                alert('Funcionalidade de Importação com AI em desenvolvimento!');
+            }
+
+            function generateReport(type) {
+                alert(`Gerando relatório: ${type}`);
+            }
+
+            function toggleForm(id) {
+                const form = document.getElementById(id);
+                if (form) {
+                    if (form.classList.contains('hidden')) {
+                        form.classList.remove('hidden'); // Mostra o formulário
+                    } else {
+                        form.classList.add('hidden'); // Esconde o formulário
+                    }
+                } else {
+                    console.error(`Elemento com ID "${id}" não encontrado.`);
+                }
+            }
+
+            function toggleReports(id) {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.classList.toggle('hidden'); // Alterna a classe 'hidden'
+                } else {
+                    console.error(`Elemento com ID "${id}" não encontrado.`);
+                }
+            }
+
+
+
+                function generateReport(type) {
+                    alert(`Gerando relatório do tipo: ${type}`);
+                }
+
+        </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".btn-apagar").forEach(button => {
+                button.addEventListener("click", function () {
+                    const lancamentoId = this.getAttribute("data-id");
+                    if (confirm("Tem certeza que deseja apagar este lançamento?")) {
+                        fetch(`/contabil/apagar/${lancamentoId}/`, {
+                            method: "DELETE",
+                            headers: { "X-CSRFToken": "{{ csrf_token }}" }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert("Lançamento apagado com sucesso!");
+                                location.reload(); // Atualiza a página
+                            } else {
+                                alert("Erro ao tentar apagar o lançamento.");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Função para editar um lançamento
+            document.querySelectorAll(".btn-edit").forEach(button => {
+                button.addEventListener("click", function () {
+                    const lancamentoId = this.getAttribute("data-id");
+
+                    // Faz uma requisição para obter os dados do lançamento
+                    fetch(`/contabil/editar/${lancamentoId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Atualiza o formulário com os dados do lançamento
+                            document.querySelector("#lancamento-id").value = lancamentoId;
+                            document.querySelector("#data").value = data.data;
+                            document.querySelector("#valor").value = data.valor;
+                            document.querySelector("#conta_debito").value = data.conta_debito;
+                            document.querySelector("#conta_credito").value = data.conta_credito;
+                            document.querySelector("#historico").value = data.historico;
+
+                            // Ajusta o título e o botão de submit
+                            document.querySelector("#form-title").textContent = "Editar Lançamento";
+                            document.querySelector("#form-lancamento").action = `/contabil/editar/${lancamentoId}/`;
+
+                            // Exibe o formulário
+                            toggleForm("lancamentoForm");
+                        });
+                });
+            });
+
+            // Função para criar um novo lançamento
+            document.querySelector("#btn-novo-lancamento").addEventListener("click", function () {
+                // Limpa o formulário
+                document.querySelector("#form-lancamento").reset();
+                document.querySelector("#lancamento-id").value = "";
+
+                // Ajusta o título e o botão de submit
+                document.querySelector("#form-title").textContent = "Novo Lançamento";
+                document.querySelector("#form-lancamento").action = "{% url 'contabil:novo_lancamento' %}";
+
+                // Exibe o formulário
+                toggleForm("lancamentoForm");
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".btn-view").forEach(button => {
+                button.addEventListener("click", function () {
+                    const lancamentoId = this.getAttribute("data-id");
+
+                    fetch(`/contabil/editar/${lancamentoId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Preenche o formulário
+                        document.querySelector("#data").value = data.data;
+                        document.querySelector("#conta_debito").value = data.conta_debito;
+                        document.querySelector("#conta_credito").value = data.conta_credito;
+                        document.querySelector("#valor").value = data.valor;
+                        document.querySelector("#historico").value = data.historico;
+
+                        // Torna os campos somente leitura
+                        document.querySelectorAll("input, select, textarea").forEach(field => {
+                            field.setAttribute("disabled", "true");
+                        });
+
+                        // Exibe o formulário
+                        toggleForm("lancamentoForm");
+                    });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.querySelector(".btn-action").addEventListener("click", function () {
+            toggleForm("calculoImpostoForm");
+        });
+
+        function ordenarTabela(colIndex) {
+        const tabela = document.getElementById("tabela-calculos");
+        const linhas = Array.from(tabela.rows).slice(1); // Ignora o cabeçalho
+        const ordemAtual = tabela.dataset.ordem || "asc";
+
+        // Ordena as linhas com base na coluna clicada
+        linhas.sort((a, b) => {
+            const valorA = a.cells[colIndex].innerText.trim();
+            const valorB = b.cells[colIndex].innerText.trim();
+
+            return ordemAtual === "asc"
+                ? valorA.localeCompare(valorB, undefined, { numeric: true })
+                : valorB.localeCompare(valorA, undefined, { numeric: true });
+        });
+
+        // Atualiza a tabela
+        const corpoTabela = tabela.querySelector("tbody");
+        linhas.forEach((linha) => corpoTabela.appendChild(linha));
+
+        // Alterna a ordem para a próxima classificação
+        tabela.dataset.ordem = ordemAtual === "asc" ? "desc" : "asc";
+    }
+
+    document.querySelectorAll(".btn-view").forEach(button => {
+        button.addEventListener("click", function () {
+            const id = this.getAttribute("data-id");
+            fetch(`/fiscal/ver/${id}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Cria um modal com os dados ou exibe um alerta mais detalhado
+                    alert(`
+                        Detalhes do Resultado:
+                        - Período: ${data.periodo}
+                        - RBT12: R$ ${data.rbt12}
+                        - Faturamento do Mês: R$ ${data.faturamento_base_mes}
+                        - Alíquota: ${data.aliquota}%
+                        - Imposto Devido: R$ ${data.imposto_devido}
+                    `);
+                });
+        });
+    });
+
+
+        // Editar resultado fiscal
+    document.querySelectorAll(".btn-edit").forEach(button => {
+        button.addEventListener("click", function () {
+            const id = this.getAttribute("data-id");
+            fetch(`/fiscal/editar/${id}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector("#rbt12").value = data.rbt12;
+                    document.querySelector("#faturamento_base_mes").value = data.faturamento_base_mes;
+                    document.querySelector("#periodo").value = data.periodo;
+                    document.querySelector("#aliquota").value = data.aliquota;
+                    document.querySelector("#imposto_devido").value = data.imposto_devido; // Preencher
+
+                    const form = document.querySelector("#form-imposto");
+                    form.action = `/fiscal/editar/${id}/`;
+                    toggleForm("calculoImpostoForm");
+                });
+        });
+    });
+
+
+
+        // Apagar resultado fiscal
+    document.querySelectorAll(".btn-apagar").forEach(button => {
+        button.addEventListener("click", function () {
+            const id = this.getAttribute("data-id");
+            if (confirm("Tem certeza que deseja apagar este resultado fiscal?")) {
+                fetch(`/fiscal/apagar/${id}/`, {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Resultado fiscal apagado com sucesso!");
+                        location.reload();
+                    } else {
+                        alert("Erro ao tentar apagar o resultado fiscal.");
+                    }
+                });
+            }
+        });
+    });
+
+
+
+    </script>
+
+
+    </body>
+    </html>

@@ -1,0 +1,158 @@
+/* ================================= */
+/* RESET E VARIÁVEIS */
+/* ================================= */
+:root {
+    --primary-color: #16233b; /* Cor principal */
+    --secondary-color: #029694; /* Cor secundária */
+    --accent-color: #dadada;   /* Cor de destaque */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-color);
+    background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* ================================= */
+/* CONTAINER PRINCIPAL */
+/* ================================= */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.95); /* Fundo semitransparente */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* ================================= */
+/* CARD DE LOGIN */
+/* ================================= */
+.login-card {
+    width: 100%;
+    padding: 20px;
+}
+
+.login-title {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ================================= */
+/* FORMULÁRIO */
+/* ================================= */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(2, 150, 148, 0.5);
+}
+
+/* ================================= */
+/* BOTÃO DE LOGIN */
+/* ================================= */
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: rgba(2, 150, 148, 0.8);
+}
+
+.login-btn:active {
+    transform: scale(0.98);
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 50%;
+    font-family: 'ARPDisplay-240', sans-serif;
+    padding-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.logo-img {
+    width: 40%;
+    height: auto;
+    padding-bottom: 10px;
+}
+
+.logotipo-img {
+    width: 120%;
+    height: auto;
+}
+
+/* ================================= */
+/* RESPONSIVIDADE */
+/* ================================= */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 15px;
+    }
+
+    .login-title {
+        font-size: 20px;
+    }
+
+    input {
+        font-size: 14px;
+    }
+
+    .login-btn {
+        font-size: 14px;
+    }
+}

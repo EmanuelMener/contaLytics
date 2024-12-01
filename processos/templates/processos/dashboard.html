@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Processos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fiscal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+           <button class="toggle-sidebar" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <img src="{% static 'images/logo.svg' %}" alt="User" class="logo-img">
+                <img src="{% static 'images/logotipo.svg' %}" alt="User" class="logotipo-img">
+
+            </div>
+            <nav class="nav">
+                <div class="profile">
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                    <div class="inf_personal">
+                        <p class="username">Lucas Montana</p>
+                        <p class="email">
+                            <i class="fas fa-envelope"></i> lucas.mon@co...
+                        </p>
+                    </div>
+                </div>
+                <a href="{% url 'contabilidade:dashboard' %}" class="nav-link">
+                    <i class="fas fa-home"></i> <spam>Home</spam>
+                </a>
+                <a href="{% url 'contabil:dashboard' %}" class="nav-link ">
+                    <i class="fas fa-chart-line"></i> <spam>Contábil</spam>
+                </a>
+                <a href="{% url 'fiscal:dashboard' %}" class="nav-link">
+                    <i class="fas fa-file-invoice-dollar"></i> <spam>Fiscal</spam>
+                </a>
+                <a href="{% url 'folha_pagamento:dashboard' %}" class="nav-link">
+                    <i class="fas fa-money-check-alt"></i> <spam>Folha de Pagamento</spam>
+                </a>
+                <a href="{% url 'processos:dashboard' %}" class="nav-link marcador-Ativado">
+                    <i class="fas fa-gavel marcadorIco-Ativado"></i> <spam>Processos</spam>
+                </a>
+            </nav>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">
+                    <span>Sair</span> <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Barra de Pesquisa -->
+            <div class="barradepesquisa">
+                <div class="search-bar">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input type="text" placeholder="Pesquisar processo..." class="search-input">
+                    <div class="notif-canva">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <header class="header">
+                <h2>Módulo de Processos</h2>
+                <p>Bem-vindo ao módulo de gestão de processos.</p>
+            </header>
+
+            <!-- Cards de Ações -->
+            <section class="actions">
+                <button class="btn-action" onclick="toggleForm('novoProcessoForm')">
+                    <i class="fas fa-plus-circle"></i> Novo Processo
+                </button>
+                <button class="btn-action" onclick="abrirHistorico()">
+                    <i class="fas fa-history"></i> Histórico de Processos
+                </button>
+            </section>
+
+            <!-- Formulário para Novo Processo -->
+            <div id="novoProcessoForm" class="form-popup hidden">
+                <form action="{% url 'processos:criar_processo' %}" method="POST" id="form-processo">
+                    <div class="cabecaForm">
+                        <h3 id="form-title">Criar Novo Processo</h3>
+                        <button type="button" class="btn" onclick="toggleForm('novoProcessoForm')">
+                            <i class="fas fa-close"></i>
+                        </button>
+                    </div>
+
+                    {% csrf_token %}
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="descricao" rows="3" required></textarea>
+
+                    <label for="responsavel">Responsável:</label>
+                    <input type="text" id="responsavel" name="responsavel" required>
+
+                    <label for="prazo">Prazo (opcional):</label>
+                    <input type="date" id="prazo" name="prazo">
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn">Salvar</button>
+                        <button type="button" class="btn-cancel btn" onclick="toggleForm('novoProcessoForm')">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabela de Processos Atuais -->
+            <div class="recent-transactions">
+                <h2>Processos Recentes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Descrição</th>
+                            <th>Responsável</th>
+                            <th>Status</th>
+                            <th>Prazo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for processo in processos %}
+                        <tr>
+                            <td>{{ processo.protocolo }}</td> <!-- Campo protocolo -->
+                            <td>{{ processo.descricao }}</td>
+                            <td>{{ processo.responsavel }}</td>
+                            <td>{{ processo.status }}</td>
+                            <td>{{ processo.prazo|date:"d/m/Y" }}</td>
+                            <td>
+                                <button class="btn-view" data-id="{{ processo.id }}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-edit" data-id="{{ processo.id }}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="btn-apagar" data-id="{{ processo.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">Nenhum processo encontrado.</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function toggleForm(id) {
+            const form = document.getElementById(id);
+            form.classList.toggle('hidden');
+        }
+
+        function abrirHistorico() {
+            alert("Histórico de processos em construção!");
+        }
+    </script>
+<script>
+const ativosCtx = document.getElementById('ativosChart').getContext('2d');
+new Chart(ativosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Ativos',
+            data: [100, 200, 150, 300, 250],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false, // Desativa a responsividade
+        maintainAspectRatio: false, // Garante que o gráfico respeite o tamanho do canvas
+    }
+});
+
+const passivosCtx = document.getElementById('passivosChart').getContext('2d');
+new Chart(passivosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Passivos',
+            data: [80, 150, 130, 200, 220],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false,
+        maintainAspectRatio: false,
+    }
+});
+
+</script>
+
+<script>
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+new Chart(activityCtx, {
+    type: 'line',
+    data: {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Eixo X (dias do mês)
+        datasets: [
+            {
+                label: 'Linha 1',
+                data: [500, 400, 600, 550, 700, 500, 600, 750, 650, 500],
+                borderColor: 'rgba(33, 150, 243, 1)', // Azul principal
+                backgroundColor: 'rgba(33, 150, 243, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+            {
+                label: 'Linha 2',
+                data: [400, 300, 500, 450, 600, 450, 550, 700, 600, 450],
+                borderColor: 'rgba(0, 200, 255, 1)', // Azul secundário
+                backgroundColor: 'rgba(0, 200, 255, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false, // Permite que o gráfico use o tamanho do container
+    },
+});
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('closed'); // Adiciona ou remove a classe 'closed'
+}
+</script>
+</body>
+</html>

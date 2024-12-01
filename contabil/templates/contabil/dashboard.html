@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Contábil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contabil.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+           <button class="toggle-sidebar" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <img src="{% static 'images/logo.svg' %}" alt="User" class="logo-img">
+                <img src="{% static 'images/logotipo.svg' %}" alt="User" class="logotipo-img">
+
+            </div>
+            <nav class="nav">
+                <div class="profile">
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                    <div class="inf_personal">
+                        <p class="username">Lucas Montana</p>
+                        <p class="email">
+                            <i class="fas fa-envelope"></i> lucas.mon@co...
+                        </p>
+                    </div>
+                </div>
+                <a href="{% url 'contabilidade:dashboard' %}" class="nav-link">
+                    <i class="fas fa-home"></i> <spam>Home</spam>
+                </a>
+                <a href="{% url 'contabil:dashboard' %}" class="nav-link marcador-Ativado">
+                    <i class="fas fa-chart-line marcadorIco-Ativado"></i> <spam>Contábil</spam>
+                </a>
+                <a href="{% url 'fiscal:dashboard' %}" class="nav-link">
+                    <i class="fas fa-file-invoice-dollar"></i> <spam>Fiscal</spam>
+                </a>
+                <a href="{% url 'folha_pagamento:dashboard' %}" class="nav-link">
+                    <i class="fas fa-money-check-alt"></i> <spam>Folha de Pagamento</spam>
+                </a>
+                <a href="{% url 'processos:dashboard' %}" class="nav-link">
+                    <i class="fas fa-gavel"></i> <spam>Processos</spam>
+                </a>
+            </nav>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">
+                    <span>Sair</span> <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Barra de Pesquisa -->
+            <div class="barradepesquisa">
+                <div class="search-bar">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input type="text" placeholder="Pesquisar..." class="search-input">
+                    <div class="notif-canva">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <header class="header">
+                <h2>Módulo Contábil</h2>
+                <p>Bem-vindo ao Módulo Contábil</p>
+            </header>
+
+            <!-- Cards de Ações -->
+            <section class="actions">
+                <button class="btn-action" onclick="toggleForm('lancamentoForm')">
+                    <i class="fas fa-plus-circle"></i> Novo Lançamento
+                </button>
+                <button class="btn-action" onclick="toggleReports('relatoriosSection')">
+                    <i class="fas fa-file-alt"></i> Relatórios
+                </button>
+                <button class="btn-action" onclick="openAiTool()">
+                    <i class="fas fa-robot"></i> Importar com AI
+                </button>
+            </section>
+
+            <!-- Formulário de Lançamento -->
+            <div id="lancamentoForm" class="form-popup hidden">
+                <form action="{% url 'contabil:novo_lancamento' %}" method="POST" id="form-lancamento">
+                    <div class="cabecaForm">
+                        <h3 id="form-title">Novo Lançamento</h3>
+                        <button type="button" class="btn" onclick="toggleForm('lancamentoForm')"><i class="fas fa-close"></i></button>
+                    </div>
+
+                    {% csrf_token %}
+                    <!-- Campo oculto para o ID -->
+                    <input type="hidden" id="lancamento-id" name="id">
+
+                    <div class="id-data">
+                        <div class="Datalan">
+                            <label for="data">Data:</label>
+                            <input type="date" id="data" name="data" required>
+                        </div>
+                        <div class="idlan">
+                            <label for="valor">Valor:</label>
+                            <input type="number" step="0.01" id="valor" name="valor" required>
+                        </div>
+                    </div>
+
+                    <div class="contas">
+                        <div class="ConDeb">
+                            <label for="conta_debito">Conta a Débito:</label>
+                            <select class="list" id="conta_debito" name="conta_debito" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="caixa">Caixa</option>
+                                <option value="banco">Banco</option>
+                                <option value="estoque">Estoque</option>
+                            </select>
+                        </div>
+                        <div class="ConCred">
+                            <label for="conta_credito">Conta a Crédito:</label>
+                            <select class="list" id="conta_credito" name="conta_credito" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="receitas">Receitas</option>
+                                <option value="despesas">Despesas</option>
+                                <option value="clientes">Clientes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="historico">Histórico:</label>
+                    <textarea class="historico" id="historico" name="historico" rows="3" required></textarea>
+
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-salvar" id="form-submit">Salvar</button>
+                        <button type="button" class="btn-cancel btn" onclick="toggleForm('lancamentoForm')">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+
+
+            <!-- Relatórios -->
+            <div id="relatoriosSection" class="form-popup hidden">
+                <h3>Relatórios Disponíveis</h3>
+                <button class="btn-report" onclick="generateReport('dre')">DRE</button>
+                <button class="btn-report" onclick="generateReport('balanco')">Balanço Patrimonial</button>
+                <button class="btn-report" onclick="generateReport('dfc')">DFC</button>
+                <button class="btn-report" onclick="generateReport('indices')">Índices Financeiros</button>
+                <button class="btn-cancel-rel btn" onclick="toggleReports('relatoriosSection')">Fechar</button>
+            </div>
+
+            <!-- Tabela de Últimos Lançamentos -->
+            <div class="recent-transactions">
+                <h2>Últimos Lançamentos Contábeis</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Conta Débito</th>
+                            <th>Conta Crédito</th>
+                            <th>Valor</th>
+                            <th>Histórico</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lancamento in lancamentos %}
+                        <tr>
+                            <td>{{ lancamento.id }}</td>
+                            <td>{{ lancamento.data }}</td>
+                            <td>{{ lancamento.conta_debito }}</td>
+                            <td>{{ lancamento.conta_credito }}</td>
+                            <td>R$ {{ lancamento.valor }}</td>
+                            <td>{{ lancamento.historico }}</td>
+                            <td>
+                                <button class="btn-view" data-id="{{ lancamento.id }}"><i class="fas fa-eye"></i></button>
+                                <button class="btn-edit" data-id="{{ lancamento.id }}"><i class="fas fa-pencil-alt"></i></button>
+                                <button class="btn-apagar" data-id="{{ lancamento.id }}"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">Nenhum lançamento encontrado.</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+        </main>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ativosCtx = document.getElementById('ativosChart').getContext('2d');
+new Chart(ativosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Ativos',
+            data: [100, 200, 150, 300, 250],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false, // Desativa a responsividade
+        maintainAspectRatio: false, // Garante que o gráfico respeite o tamanho do canvas
+    }
+});
+
+const passivosCtx = document.getElementById('passivosChart').getContext('2d');
+new Chart(passivosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Passivos',
+            data: [80, 150, 130, 200, 220],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false,
+        maintainAspectRatio: false,
+    }
+});
+
+</script>
+
+<script>
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+new Chart(activityCtx, {
+    type: 'line',
+    data: {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Eixo X (dias do mês)
+        datasets: [
+            {
+                label: 'Linha 1',
+                data: [500, 400, 600, 550, 700, 500, 600, 750, 650, 500],
+                borderColor: 'rgba(33, 150, 243, 1)', // Azul principal
+                backgroundColor: 'rgba(33, 150, 243, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+            {
+                label: 'Linha 2',
+                data: [400, 300, 500, 450, 600, 450, 550, 700, 600, 450],
+                borderColor: 'rgba(0, 200, 255, 1)', // Azul secundário
+                backgroundColor: 'rgba(0, 200, 255, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false, // Permite que o gráfico use o tamanho do container
+    },
+});
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('closed'); // Adiciona ou remove a classe 'closed'
+}
+</script>
+
+    <script>
+        function showReports() {
+            const section = document.getElementById('relatoriosSection');
+            section.classList.remove('hidden');
+        }
+
+        function hideReports() {
+            const section = document.getElementById('relatoriosSection');
+            section.classList.add('hidden');
+        }
+
+        function openAiTool() {
+            alert('Funcionalidade de Importação com AI em desenvolvimento!');
+        }
+
+        function generateReport(type) {
+            alert(`Gerando relatório: ${type}`);
+        }
+
+        function toggleForm(id) {
+            const form = document.getElementById(id);
+            if (form) {
+                if (form.classList.contains('hidden')) {
+                    form.classList.remove('hidden'); // Mostra o formulário
+                } else {
+                    form.classList.add('hidden'); // Esconde o formulário
+                }
+            } else {
+                console.error(`Elemento com ID "${id}" não encontrado.`);
+            }
+        }
+
+        function toggleReports(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                section.classList.toggle('hidden'); // Alterna a classe 'hidden'
+            } else {
+                console.error(`Elemento com ID "${id}" não encontrado.`);
+            }
+        }
+
+
+
+            function generateReport(type) {
+                alert(`Gerando relatório do tipo: ${type}`);
+            }
+
+    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".btn-apagar").forEach(button => {
+            button.addEventListener("click", function () {
+                const lancamentoId = this.getAttribute("data-id");
+                if (confirm("Tem certeza que deseja apagar este lançamento?")) {
+                    fetch(`/contabil/apagar/${lancamentoId}/`, {
+                        method: "DELETE",
+                        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Lançamento apagado com sucesso!");
+                            location.reload(); // Atualiza a página
+                        } else {
+                            alert("Erro ao tentar apagar o lançamento.");
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Função para editar um lançamento
+        document.querySelectorAll(".btn-edit").forEach(button => {
+            button.addEventListener("click", function () {
+                const lancamentoId = this.getAttribute("data-id");
+
+                // Faz uma requisição para obter os dados do lançamento
+                fetch(`/contabil/editar/${lancamentoId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Atualiza o formulário com os dados do lançamento
+                        document.querySelector("#lancamento-id").value = lancamentoId;
+                        document.querySelector("#data").value = data.data;
+                        document.querySelector("#valor").value = data.valor;
+                        document.querySelector("#conta_debito").value = data.conta_debito;
+                        document.querySelector("#conta_credito").value = data.conta_credito;
+                        document.querySelector("#historico").value = data.historico;
+
+                        // Ajusta o título e o botão de submit
+                        document.querySelector("#form-title").textContent = "Editar Lançamento";
+                        document.querySelector("#form-lancamento").action = `/contabil/editar/${lancamentoId}/`;
+
+                        // Exibe o formulário
+                        toggleForm("lancamentoForm");
+                    });
+            });
+        });
+
+        // Função para criar um novo lançamento
+        document.querySelector("#btn-novo-lancamento").addEventListener("click", function () {
+            // Limpa o formulário
+            document.querySelector("#form-lancamento").reset();
+            document.querySelector("#lancamento-id").value = "";
+
+            // Ajusta o título e o botão de submit
+            document.querySelector("#form-title").textContent = "Novo Lançamento";
+            document.querySelector("#form-lancamento").action = "{% url 'contabil:novo_lancamento' %}";
+
+            // Exibe o formulário
+            toggleForm("lancamentoForm");
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".btn-view").forEach(button => {
+            button.addEventListener("click", function () {
+                const lancamentoId = this.getAttribute("data-id");
+
+                fetch(`/contabil/editar/${lancamentoId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Preenche o formulário
+                    document.querySelector("#data").value = data.data;
+                    document.querySelector("#conta_debito").value = data.conta_debito;
+                    document.querySelector("#conta_credito").value = data.conta_credito;
+                    document.querySelector("#valor").value = data.valor;
+                    document.querySelector("#historico").value = data.historico;
+
+                    // Torna os campos somente leitura
+                    document.querySelectorAll("input, select, textarea").forEach(field => {
+                        field.setAttribute("disabled", "true");
+                    });
+
+                    // Exibe o formulário
+                    toggleForm("lancamentoForm");
+                });
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>

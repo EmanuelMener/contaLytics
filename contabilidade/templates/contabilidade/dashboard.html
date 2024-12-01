@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Contábil</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <!--<div class="barra-top">
+        <div>
+
+        </div>
+    </div>-->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+           <button class="toggle-sidebar" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <img src="{% static 'images/logo.svg' %}" alt="User" class="logo-img">
+                <img src="{% static 'images/logotipo.svg' %}" alt="User" class="logotipo-img">
+
+            </div>
+            <nav class="nav">
+                <div class="profile">
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                    <div class="inf_personal">
+                        <p class="username">Lucas Montana</p>
+                        <p class="email">
+                            <i class="fas fa-envelope"></i> lucas.mon@co...
+                        </p>
+                    </div>
+                </div>
+                <a href="{% url 'contabilidade:dashboard' %}" class="nav-link marcador-Ativado">
+                    <i class="fas fa-home marcadorIco-Ativado"></i> <spam>Home</spam>
+                </a>
+                <a href="{% url 'contabil:dashboard' %}" class="nav-link">
+                    <i class="fas fa-chart-line"></i> <spam>Contábil</spam>
+                </a>
+                <a href="{% url 'fiscal:dashboard' %}" class="nav-link">
+                    <i class="fas fa-file-invoice-dollar"></i> <spam>Fiscal</spam>
+                </a>
+                <a href="{% url 'folha_pagamento:dashboard' %}" class="nav-link">
+                    <i class="fas fa-money-check-alt"></i> <spam>Folha de Pagamento</spam>
+                </a>
+                <a href="{% url 'processos:dashboard' %}" class="nav-link">
+                    <i class="fas fa-gavel"></i> <spam>Processos</spam>
+                </a>
+            </nav>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">
+                    <span>Sair</span> <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
+
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="barradepesquisa">
+                <div class="search-bar">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input type="text" placeholder="Pesquisar..." class="search-input">
+                    <div class="notif-canva">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="profile-canva">
+                        <img src="{% static 'images/user.png' %}" alt="User" class="profile-img">
+                    </div>
+                </div>
+            </div>
+
+            <header class="header">
+                <h2>Dashboard</h2>
+                <p>Bem-vindo ao sistema contábil</p>
+            </header>
+
+            <section class="stats">
+                <div class="card blue">
+                    <div class="card-content">
+                        <i class="fas fa-coins card-icon"></i>
+                        <h2 class="card-title">Ativo</h2>
+                        <h5 class="card-value">R$ 500.000</h5>
+                    </div>
+                </div>
+                <div class="card pink">
+                    <div class="card-content">
+                        <i class="fas fa-balance-scale card-icon"></i>
+                        <h2 class="card-title">Passivo</h2>
+                        <h5 class="card-value">R$ 300.000</h5>
+                    </div>
+                </div>
+                <div class="card purple">
+                    <div class="card-content">
+                        <i class="fas fa-piggy-bank card-icon"></i>
+                        <h2 class="card-title">Pat. Líquido</h2>
+                        <h5 class="card-value">R$ 200.000</h5>
+                    </div>
+                </div>
+            </section>
+
+            <div class="grid">
+                <!-- Total de Ativos -->
+                <div class="bg-white p-4 rounded shadow flex flex-col items-center">
+                    <h2 class="text-sm font-semibold mb-2">Total de Ativos</h2>
+                    <canvas id="ativosChart" width="425" height="200"></canvas>
+                </div>
+
+                <!-- Total de Passivos -->
+                <div class="bg-white p-4 rounded shadow flex flex-col items-center">
+                    <h2 class="text-sm font-semibold mb-2">Total de Passivos</h2>
+                    <canvas id="passivosChart" width="425" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="grid2">
+                <h2 class="text-sm font-semibold mb-2">Atividade Mensal</h2>
+                <div class="flex justify-between w-full">
+                    <button class="btn active">Mensal</button>
+                    <button class="btn">Semanal</button>
+                    <button class="btn">Anual</button>
+                </div>
+                <div class="graph-container">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ativosCtx = document.getElementById('ativosChart').getContext('2d');
+new Chart(ativosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Ativos',
+            data: [100, 200, 150, 300, 250],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false, // Desativa a responsividade
+        maintainAspectRatio: false, // Garante que o gráfico respeite o tamanho do canvas
+    }
+});
+
+const passivosCtx = document.getElementById('passivosChart').getContext('2d');
+new Chart(passivosCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        datasets: [{
+            label: 'Passivos',
+            data: [80, 150, 130, 200, 220],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: false,
+        maintainAspectRatio: false,
+    }
+});
+
+</script>
+
+<script>
+const activityCtx = document.getElementById('activityChart').getContext('2d');
+new Chart(activityCtx, {
+    type: 'line',
+    data: {
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], // Eixo X (dias do mês)
+        datasets: [
+            {
+                label: 'Linha 1',
+                data: [500, 400, 600, 550, 700, 500, 600, 750, 650, 500],
+                borderColor: 'rgba(33, 150, 243, 1)', // Azul principal
+                backgroundColor: 'rgba(33, 150, 243, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+            {
+                label: 'Linha 2',
+                data: [400, 300, 500, 450, 600, 450, 550, 700, 600, 450],
+                borderColor: 'rgba(0, 200, 255, 1)', // Azul secundário
+                backgroundColor: 'rgba(0, 200, 255, 0.1)', // Preenchimento leve
+                borderWidth: 2,
+                tension: 0.4, // Curvatura das linhas
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false, // Permite que o gráfico use o tamanho do container
+    },
+});
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('closed'); // Adiciona ou remove a classe 'closed'
+}
+</script>
+
+
+</body>
+</html>

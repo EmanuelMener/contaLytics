@@ -8,12 +8,28 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-color: #16233b;
+    --secondary-color: #029694;
+    --accent-color: #dadada;
+}
+
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f4f7fc;
     color: #333;
     margin: 0;
     padding: 0;
+}
+
+.barra-top{
+    top:0;!important;
+    width: 100vw;
+    height: 3%;
+    background-color: #029694;
+    z-index: 10;!important;
+    position: fixed;
 }
 
 .container {
@@ -30,8 +46,8 @@ body {
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background-color: #1e3a8a;
-    height: 100vh;
+    background-color: var(--primary-color);
+    height: 100%;
     color: white;
     display: flex;
     flex-direction: column;
@@ -54,7 +70,7 @@ body {
     right: -15px; /* Move o pseudo-elemento para fora do sidebar */
     width: 30px; /* Define a largura do "fantasma" */
     height: 100%; /* Preenche a altura do sidebar */
-    background: #1e3a8a; /* Mesma cor do sidebar */
+    background: #16233b; /* Mesma cor do sidebar */
     border-top-right-radius: 50px; /* Arredonda o canto superior */
     border-bottom-right-radius: 50px; /* Arredonda o canto inferior */
     z-index: 1; /* Coloca o pseudo-elemento atrás do conteúdo do sidebar */
@@ -68,7 +84,7 @@ body {
     right: -15px;
     width: 30px;
     height: 100%;
-    background: #1e3a8a;
+    background: var(--primary-color);
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
     z-index: 1;
@@ -87,14 +103,14 @@ body {
 }
 
 .sidebar.closed ~ .main {
-    margin-left: 30px;
+    margin-left: 50px;
 }
 
 
 /* Botão de toggle */
 .toggle-sidebar {
     position: fixed;
-    top: 20px;
+    top: 45px;
     left: 20px;
     background-color: transparent;
     color: #ececec;
@@ -108,28 +124,66 @@ body {
 }
 
 .toggle-sidebar:hover {
-    background-color: #2c4a7a;
+    background-color: #16233b;
 }
 
 .sidebar.closed .toggle-sidebar{
-    color: #2c4a7a;
+    color: #16233b;
     position: absolute;
     margin: 0 auto;
     left: auto;
 }
 
 .sidebar.closed .toggle-sidebar:hover {
-    background-color: rgba(55, 93, 156, 0.3);
+    background-color: rgba(22, 35, 59, 0.3);
 }
 
 /* Logo */
 .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 50%;
     font-family: 'ARPDisplay-240', sans-serif;
+    padding-top: 30px;
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
 }
+
+.logo-img {
+    width: 40%;
+    height: auto;
+    padding-bottom: 10px;
+}
+
+.logotipo-img {
+    width: 120%;
+    height: auto;
+}
+
+.sidebar.closed .logotipo-img {
+    display: none;
+}
+
+.sidebar.closed .logo-img {
+    padding-bottom: 0;
+    padding-top: 50px;
+    width: 40px;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    background-size: cover;
+}
+
 
 /* Perfil */
 .profile {
@@ -187,7 +241,7 @@ body {
     margin: 5px 0;
     color: white;
     text-decoration: none;
-    background: linear-gradient(135deg, rgb(30, 58, 138), rgb(64, 91, 168));
+    background: linear-gradient(135deg, rgb(22, 35, 59), rgba(22, 35, 59, 0.72));
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
@@ -221,28 +275,44 @@ body {
 }
 
 .sidebar.closed .marcador-Ativado {
-    background: #1e3a8a;
+    background: #16233b;
 }
 
 .sidebar.closed .nav-link .marcadorIco-Ativado {
     color: white;
 }
 
-.logout {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #ef4444;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+aside.sidebar form .logout {
+    width: 14rem; /* Ajuste a largura */!important;
+    padding: 10px 20px; /* Ajuste do espaçamento interno */
+    margin: 0 auto;
+    margin-top: 10px; /* Margem superior */
+    background-color: #e10b0b; /* Cor de fundo */
+    color: white; /* Cor do texto */
+    font-size: 16px; /* Tamanho da fonte */
+    text-align: center; /* Centraliza o texto */
+    border: none; /* Remove a borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Mostra o cursor de ponteiro */
+    display: flex; /* Alinhamento flexível */
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    gap: 10px; /* Espaço entre o texto e o ícone */
+    transition: background-color 0.3s ease; /* Transição suave */
 }
 
-.logout:hover {
-    background-color: #dc2626;
+.sidebar.closed .logout:hover {
+    background-color: #dc2626; /* Cor ao passar o mouse */
 }
+
+.sidebar.closed form .logout {
+    max-width: 3rem;
+}
+
+.sidebar.closed .logout span {
+    display: none;
+}
+
 
 /* Main Content */
 .main {
